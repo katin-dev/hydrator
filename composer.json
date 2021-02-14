@@ -1,0 +1,21 @@
+{
+    "name": "katin.dev/hydrator",
+    "description": "PHP Recursive Hydrator",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "katin-dev",
+            "email": "katin.dev@gmail.com"
+        }
+    ],
+    "require": {
+        "doctrine/instantiator": "^1.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\" : "src/",
+            "Test\\" : "tests/"
+        }
+    }
+}
