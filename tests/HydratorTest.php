@@ -19,7 +19,8 @@ class HydratorTest extends TestCase
             'actions' => json_encode([
                 ['name' => 'action-1', 'value' => 'value-1'],
                 ['name' => 'action-2', 'value' => 'value-2'],
-            ])
+            ]),
+            'created_at' => '2021-02-03 14:33:33'
         ];
 
         $hydrator = new Hydrator(new Instantiator());
@@ -41,7 +42,8 @@ class HydratorTest extends TestCase
                     'name'  => new HydrationRule('string', 'name', 'name'),
                     'value' => new HydrationRule('string', 'value', 'value'),
                 ]
-            ])
+            ]),
+            'date' => new HydrationRule(HydrationRule::TYPE_DATETIME, 'date', 'created_at')
         ];
 
         /** @var Product $product */
@@ -53,6 +55,7 @@ class HydratorTest extends TestCase
             [new Action('action-1', 'value-1'), new Action('action-2', 'value-2')],
             $product->getActions()
         );
+        $this->assertEquals(\DateTime::createFromFormat('Y-m-d H:i:s', '2021-02-03 14:33:33'), $product->getDate());
 
         $row = $hydrator->extract($product, $rules);
         $this->assertEquals([
@@ -63,7 +66,8 @@ class HydratorTest extends TestCase
             'actions' => json_encode([
                 ['name' => 'action-1', 'value' => 'value-1'],
                 ['name' => 'action-2', 'value' => 'value-2'],
-            ])
+            ]),
+            'created_at' => '2021-02-03 14:33:33'
         ], $row);
     }
 }

@@ -10,7 +10,9 @@
         }
     ],
     "require": {
-        "doctrine/instantiator": "^1.4"
+        "doctrine/instantiator": "^1.4",
+        "laminas/laminas-hydrator": "^4.1",
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {

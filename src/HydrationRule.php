@@ -9,7 +9,9 @@ class HydrationRule
           TYPE_JSON = 'json',
           TYPE_INT = 'int',
           TYPE_STRING = 'string',
-          TYPE_BOOL = 'bool';
+          TYPE_FLOAT = 'float',
+          TYPE_BOOL = 'bool',
+          TYPE_DATETIME = 'datetime';
 
     private string $fieldName;
     private string $columnName;
@@ -47,5 +49,18 @@ class HydrationRule
     public function isCollection()
     {
         return $this->options['is_collection'] ?? false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFieldName(): string
+    {
+        return $this->fieldName;
+    }
+
+    public function getOptions() : array
+    {
+        return $this->options;
     }
 }
