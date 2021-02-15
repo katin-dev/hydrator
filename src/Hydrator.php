@@ -33,16 +33,14 @@ class Hydrator
         $objectProperties = self::getReflProperties($object);
         foreach ($objectProperties as $property) {
             /** @var HydrationRule $rule */
-            $rule = $rules[$property->getName()] ?? new HydrationRule(HydrationRule::TYPE_ASIS, $property->getName(), $property->getName());
+            $rule = $rules[$property->getName()] ?? new HydrationRule(HydrationRule::TYPE_DEFAULT, $property->getName(), $property->getName());
 
             switch ($rule->getType()) {
-                case HydrationRule::TYPE_ASIS:
-                    $property->setValue($object, $row[$rule->getColumnName()] ?? null);
-                    break;
                 case HydrationRule::TYPE_CONVOLUTION:
                     $propertyObject = $this->hydrate($row, $rule->getClassName(), $rule->getRules());
                     $property->setValue($object, $propertyObject);
                     break;
+
                 case HydrationRule::TYPE_JSON:
                     $value = $row[$rule->getColumnName()] ?? null;
                     $valueHydrated = null;
@@ -57,14 +55,16 @@ class Hydrator
 
                     $property->setValue($object, $valueHydrated);
                     break;
-                case 'int':
+
+                case HydrationRule::TYPE_INT:
                     $value = isset($row[$rule->getColumnName()]) ? (int) $row[$rule->getColumnName()] : null;
                     $property->setValue($object, $value);
                     break;
-                case 'string':
+
+                case HydrationRule::TYPE_STRING:
+                case HydrationRule::TYPE_DEFAULT:
                 default:
-                    $value = isset($row[$rule->getColumnName()]) ? $row[$rule->getColumnName()] : null;
-                    $property->setValue($object, $value);
+                    $property->setValue($object, $row[$rule->getColumnName()] ?? null);
                     break;
             }
         }
@@ -78,7 +78,7 @@ class Hydrator
         $objectProperties = self::getReflProperties($object);
         foreach ($objectProperties as $property) {
             /** @var HydrationRule $rule */
-            $rule = $rules[$property->getName()] ?? new HydrationRule(HydrationRule::TYPE_ASIS, $property->getName(), $property->getName());
+            $rule = $rules[$property->getName()] ?? new HydrationRule(HydrationRule::TYPE_DEFAULT, $property->getName(), $property->getName());
 
             switch ($rule->getType()) {
                 case HydrationRule::TYPE_CONVOLUTION:
@@ -88,22 +88,21 @@ class Hydrator
                     }
                     break;
                 case HydrationRule::TYPE_JSON:
-                    $value = $row[$rule->getColumnName()] ?? null;
-                    $valueHydrated = null;
-                    $jsonData = $value ? json_decode($value, true) : null;
+                    $value = $property->getValue($object);
+                    $valueExtracted = null;
                     if ($rule->isCollection()) {
-                        foreach ($jsonData as $jsonDataRow) {
-                            $valueHydrated[] = $this->hydrate($jsonDataRow, $rule->getClassName(), $rule->getRules());
+                        foreach ($value as $valueItem) {
+                            $valueExtracted[] = $this->extract($valueItem, $rule->getRules());
                         }
                     } else {
-                        $valueHydrated[] = $this->hydrate($jsonData, $rule->getColumnName(), $rule->getRules());
+                        $valueExtracted = $this->hydrate($value, $rule->getRules());
                     }
 
-                    $property->setValue($object, $valueHydrated);
+                    $row[$rule->getColumnName()] = json_encode($valueExtracted, JSON_UNESCAPED_UNICODE);
                     break;
-                case HydrationRule::TYPE_ASIS:
-                case 'int':
-                case 'string':
+                case HydrationRule::TYPE_DEFAULT:
+                case HydrationRule::TYPE_STRING:
+                case HydrationRule::TYPE_INT:
                 default:
                     $row[$rule->getColumnName()] = $property->getValue($object);
                     break;

@@ -4,9 +4,12 @@ namespace App;
 
 class HydrationRule
 {
-    const TYPE_ASIS = 'as_is';
-    const TYPE_CONVOLUTION = 'convolution';
-    const TYPE_JSON = 'json';
+    const TYPE_DEFAULT = 'default',
+          TYPE_CONVOLUTION = 'convolution',
+          TYPE_JSON = 'json',
+          TYPE_INT = 'int',
+          TYPE_STRING = 'string',
+          TYPE_BOOL = 'bool';
 
     private string $fieldName;
     private string $columnName;

@@ -54,8 +54,6 @@ class HydratorTest extends TestCase
             $product->getActions()
         );
 
-        var_dump($product);
-
         $row = $hydrator->extract($product, $rules);
         $this->assertEquals([
             'id'       => 1,
@@ -67,7 +65,5 @@ class HydratorTest extends TestCase
                 ['name' => 'action-2', 'value' => 'value-2'],
             ])
         ], $row);
-
-        print_r($row);
     }
 }
