@@ -47,7 +47,7 @@ class HydratorTest extends TestCase
         ];
 
         /** @var Product $product */
-        $product = $hydrator->hydrate($row, Product::class, $rules);
+        $product = $hydrator->hydrate(Product::class, $row, $rules);
         $this->assertEquals(1, $product->getId());
         $this->assertEquals('Sergey', $product->getName());
         $this->assertEquals(new Price(100, 'USD'), $product->getPrice());

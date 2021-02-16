@@ -36,7 +36,7 @@ class Hydrator
      * @return object
      * @throws \Doctrine\Instantiator\Exception\ExceptionInterface
      */
-    public function hydrate(array $row, string $className, array $rules = [])
+    public function hydrate(string $className, array $row, array $rules = [])
     {
         $object = $this->instantiator->instantiate($className);
 

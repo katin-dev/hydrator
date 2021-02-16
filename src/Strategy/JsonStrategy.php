@@ -28,7 +28,7 @@ class JsonStrategy implements StrategyInterface
             $hydrated = [];
             if (is_array($jsonData)) {
                 foreach ($jsonData as $jsonDataRow) {
-                    $hydrated[] = $this->hydrator->hydrate($jsonDataRow, $rule->getClassName(), $rule->getRules());
+                    $hydrated[] = $this->hydrator->hydrate($rule->getClassName(), $jsonDataRow, $rule->getRules());
                 }
             }
         } else {
